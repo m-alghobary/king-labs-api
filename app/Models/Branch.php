@@ -9,6 +9,12 @@ class Branch extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'phone',
+        'address',
+    ];
+
     public function users()
     {
         return $this->hasMany(User::class);

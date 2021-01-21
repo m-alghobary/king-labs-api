@@ -19,7 +19,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return response()->json(User::all());
+        $users = User::orderBy('created_at', 'DESC')->get();
+        return response()->json($users);
     }
 
     /**
