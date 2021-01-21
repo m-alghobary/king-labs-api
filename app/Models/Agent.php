@@ -5,23 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Branch extends Model
+class Agent extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
-        'phone',
+        'age',
+        'gender',
         'address',
+        'identity',
+        'identity_number',
+        'branch_id',
     ];
 
-    public function users()
+    public function branch()
     {
-        return $this->hasMany(User::class);
-    }
-
-    public function agents()
-    {
-        return $this->hasMany(Agent::class);
+        return $this->belongsTo(Branch::class);
     }
 }
