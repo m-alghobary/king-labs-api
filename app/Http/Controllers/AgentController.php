@@ -27,14 +27,7 @@ class AgentController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'age' => 'required',
-            'gender' => 'required',
-            'identity' => 'required',
-            'identity_number' => 'required',
-        ]);
-
+        $validator = $this->_validate($request);
         if ($validator->fails()) {
             return response()->json(['messages' => $validator->errors()], 400);
         }
@@ -69,14 +62,7 @@ class AgentController extends Controller
             return response()->json(['message' => 'Agent not found!'], 404);
         }
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'age' => 'required',
-            'gender' => 'required',
-            'identity' => 'required',
-            'identity_number' => 'required',
-        ]);
-
+        $validator = $this->_validate($request);
         if ($validator->fails()) {
             return response()->json(['messages' => $validator->errors()], 400);
         }
@@ -103,5 +89,16 @@ class AgentController extends Controller
 
         $agent->delete();
         return response()->json(['data' => $agent]);
+    }
+
+    private function _validate(Request $request)
+    {
+        return Validator::make($request->all(), [
+            'name' => 'required',
+            'age' => 'required',
+            'gender' => 'required',
+            'identity' => 'required',
+            'identity_number' => 'required',
+        ]);
     }
 }

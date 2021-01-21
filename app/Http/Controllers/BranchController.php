@@ -27,12 +27,7 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'address' => 'required',
-            'phone' => 'required',
-        ]);
-
+        $validator = $this->_validate($request);
         if ($validator->fails()) {
             return response()->json(['messages' => $validator->errors()], 400);
         }
@@ -66,12 +61,7 @@ class BranchController extends Controller
             return response()->json(['message' => 'Branch not found!'], 404);
         }
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'address' => 'required',
-            'phone' => 'required',
-        ]);
-
+        $validator = $this->_validate($request);
         if ($validator->fails()) {
             return response()->json(['messages' => $validator->errors()], 400);
         }
@@ -96,5 +86,14 @@ class BranchController extends Controller
 
         $branch->delete();
         return response()->json(['data' => $branch]);
+    }
+
+    private function _validate(Request $request)
+    {
+        return Validator::make($request->all(), [
+            'name' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+        ]);
     }
 }
