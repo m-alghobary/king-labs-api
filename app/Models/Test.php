@@ -5,16 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TestType extends Model
+class Test extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
+        'price',
+        'test_type_id',
     ];
 
-    public function tests()
+    public function testType()
     {
-        return $this->hasMany(Test::class);
+        return $this->belongsTo(TestType::class);
     }
 }
