@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\TestTypeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,9 +40,16 @@ Route::get('agents/{id}', [AgentController::class, 'show'])->name('agents.show')
 Route::put('agents/{id}', [AgentController::class, 'update'])->name('agents.update');
 Route::delete('agents/{id}', [AgentController::class, 'destroy'])->name('agents.destroy');
 
-// Agents routes
+// Companies routes
 Route::get('companies', [CompanyController::class, 'index'])->name('companies.index');
 Route::post('companies', [CompanyController::class, 'store'])->name('companies.store');
 Route::get('companies/{id}', [CompanyController::class, 'show'])->name('companies.show');
 Route::put('companies/{id}', [CompanyController::class, 'update'])->name('companies.update');
 Route::delete('companies/{id}', [CompanyController::class, 'destroy'])->name('companies.destroy');
+
+// TestTypes routes
+Route::get('testTypes', [TestTypeController::class, 'index'])->name('testTypes.index');
+Route::post('testTypes', [TestTypeController::class, 'store'])->name('testTypes.store');
+Route::get('testTypes/{id}', [TestTypeController::class, 'show'])->name('testTypes.show');
+Route::put('testTypes/{id}', [TestTypeController::class, 'update'])->name('testTypes.update');
+Route::delete('testTypes/{id}', [TestTypeController::class, 'destroy'])->name('testTypes.destroy');
