@@ -33,6 +33,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'phone' => 'required',
             'job_title' => 'required',
+            'branch_id' => 'required',
             'password' => 'required|confirmed',
             'password_confirmation' => 'required',
         ]);
@@ -76,6 +77,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,'. $user->id,
             'phone' => 'required',
             'job_title' => 'required',
+            'branch_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -86,6 +88,7 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->phone = $request->phone;
         $user->job_title = $request->job_title;
+        $user->branch_id = $request->branch_id;
         $user->save();
 
         return response()->json(['data' => $user]);

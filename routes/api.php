@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\TestTypeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -53,3 +54,10 @@ Route::post('testTypes', [TestTypeController::class, 'store'])->name('testTypes.
 Route::get('testTypes/{id}', [TestTypeController::class, 'show'])->name('testTypes.show');
 Route::put('testTypes/{id}', [TestTypeController::class, 'update'])->name('testTypes.update');
 Route::delete('testTypes/{id}', [TestTypeController::class, 'destroy'])->name('testTypes.destroy');
+
+// Tests routes
+Route::get('tests', [TestController::class, 'index'])->name('tests.index');
+Route::post('tests', [TestController::class, 'store'])->name('tests.store');
+Route::get('tests/{id}', [TestController::class, 'show'])->name('tests.show');
+Route::put('tests/{id}', [TestController::class, 'update'])->name('tests.update');
+Route::delete('tests/{id}', [TestController::class, 'destroy'])->name('tests.destroy');
