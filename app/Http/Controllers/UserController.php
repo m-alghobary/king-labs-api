@@ -19,7 +19,12 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::orderBy('created_at', 'DESC')->get();
+        $users = User::with(['branch' => function ($query) {
+            $query->select('id', 'name');
+        }])
+        ->orderBy('created_at', 'DESC')
+        ->get();
+
         return response()->json($users);
     }
 

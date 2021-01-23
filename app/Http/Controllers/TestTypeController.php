@@ -18,8 +18,18 @@ class TestTypeController extends Controller
      */
     public function index()
     {
-        $testTypes = TestType::orderBy('created_at', 'DESC')->get();
+        $testTypes = TestType::withCount('tests')->orderBy('created_at', 'DESC')->get();
         return response()->json($testTypes);
+    }
+
+    public function tests($id)
+    {
+        $testType = TestType::find($id);
+        if (!$testType) {
+            return response()->json(['message' => 'Test type not found!'], 404);
+        }
+
+        return response()->json(['data' => $testType->tests]);
     }
 
     /**

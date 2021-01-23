@@ -18,7 +18,12 @@ class TestController extends Controller
      */
     public function index()
     {
-        $tests = Test::orderBy('created_at', 'DESC')->get();
+        $tests = Test::with(['testType' => function ($query) {
+            $query->select('id', 'name');
+        }])
+        ->orderBy('created_at', 'DESC')
+        ->get();
+
         return response()->json($tests);
     }
 

@@ -52,6 +52,7 @@ Route::delete('companies/{id}', [CompanyController::class, 'destroy'])->name('co
 Route::get('testTypes', [TestTypeController::class, 'index'])->name('testTypes.index');
 Route::post('testTypes', [TestTypeController::class, 'store'])->name('testTypes.store');
 Route::get('testTypes/{id}', [TestTypeController::class, 'show'])->name('testTypes.show');
+Route::get('testTypes/{id}/tests', [TestTypeController::class, 'tests'])->name('testTypes.tests');
 Route::put('testTypes/{id}', [TestTypeController::class, 'update'])->name('testTypes.update');
 Route::delete('testTypes/{id}', [TestTypeController::class, 'destroy'])->name('testTypes.destroy');
 
