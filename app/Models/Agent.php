@@ -23,4 +23,14 @@ class Agent extends Model
     {
         return $this->belongsTo(Branch::class);
     }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    public function testResults()
+    {
+        return $this->hasMany(TestResult::class);
+    }
 }
