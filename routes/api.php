@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\TestResultController;
 use App\Http\Controllers\TestTypeController;
@@ -63,6 +64,13 @@ Route::post('tests', [TestController::class, 'store'])->name('tests.store');
 Route::get('tests/{id}', [TestController::class, 'show'])->name('tests.show');
 Route::put('tests/{id}', [TestController::class, 'update'])->name('tests.update');
 Route::delete('tests/{id}', [TestController::class, 'destroy'])->name('tests.destroy');
+
+// Invoices routes
+Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
+Route::post('invoices', [InvoiceController::class, 'store'])->name('invoices.store');
+Route::get('invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
+Route::put('invoices/{id}', [InvoiceController::class, 'update'])->name('invoices.update');
+Route::delete('invoices/{id}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
 
 // Tests routes
 Route::get('testResults/{invoice_id}', [TestResultController::class, 'index'])->name('testResults.index');

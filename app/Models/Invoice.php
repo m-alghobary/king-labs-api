@@ -9,6 +9,16 @@ class Invoice extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'agent_id',
+        'user_id',
+        'payment_method',
+        'amount',
+        'remain',
+        'discount',
+        'test_ids',
+    ];
+
     public function agent()
     {
         return $this->belongsTo(Agent::class);

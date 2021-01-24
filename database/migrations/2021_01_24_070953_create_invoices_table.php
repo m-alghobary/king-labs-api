@@ -17,7 +17,7 @@ class CreateInvoicesTable extends Migration
             $table->id();
             $table->foreignId('agent_id');
             $table->foreignId('user_id');
-            $table->string('paymeny_method');
+            $table->string('payment_method');
             $table->unsignedDouble('amount');
             $table->unsignedDouble('remain');
             $table->unsignedDouble('discount');
