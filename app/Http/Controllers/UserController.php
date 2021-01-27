@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -25,7 +26,7 @@ class UserController extends Controller
         ->orderBy('created_at', 'DESC')
         ->get();
 
-        return response()->json($users);
+        return UserResource::collection($users);
     }
 
     /**
@@ -51,7 +52,7 @@ class UserController extends Controller
         $data['password'] = Hash::make($request->password);
         $user = User::create($data);
 
-        return response()->json(['data' => $user]);
+        return new UserResource($user);
     }
 
     /**
@@ -64,7 +65,7 @@ class UserController extends Controller
             return response()->json(['message' => 'User not found!'], 404);
         }
 
-        return response()->json(['data' => $user]);
+        return new UserResource($user);
     }
 
     /**
@@ -96,7 +97,7 @@ class UserController extends Controller
         $user->branch_id = $request->branch_id;
         $user->save();
 
-        return response()->json(['data' => $user]);
+        return new UserResource($user);
     }
 
     /**
@@ -110,6 +111,6 @@ class UserController extends Controller
         }
 
         $user->delete();
-        return response()->json(['data' => $user]);
+        return new UserResource($user);
     }
 }

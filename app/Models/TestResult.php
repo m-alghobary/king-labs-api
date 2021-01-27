@@ -9,6 +9,14 @@ class TestResult extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'agent_id',
+        'invoice_id',
+        'test_id',
+        'user_id',
+        'result'
+    ];
+
     public function test()
     {
         return $this->belongsTo(Test::class);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invoice;
 use App\Models\TestResult;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TestResultController extends Controller
 {
@@ -18,7 +19,18 @@ class TestResultController extends Controller
      */
     public function index($invoice_id)
     {
-        $testResults = TestResult::where('invoice_id', $invoice_id)->get();
+        $testResults = TestResult::where('invoice_id', $invoice_id)
+        ->with(['user' => function ($query) {
+            $query->select('id', 'name');
+        }])
+        ->with(['agent' => function ($query) {
+            $query->select('id', 'name');
+        }])
+        ->with(['test' => function ($query) {
+            $query->select('id', 'name', 'price');
+        }])
+        ->get();
+
         if (!$testResults) {
             return response()->json(['message' => 'Test result not found!'], 404);
         }

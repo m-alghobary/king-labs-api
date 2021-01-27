@@ -18,7 +18,14 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        $invoices = Invoice::all();
+        $invoices = Invoice::with(['agent'=> function ($query) {
+            $query->select('id', 'name');
+        }])
+        ->with(['user' => function ($query) {
+            $query->select('id', 'name');
+        }])
+        ->get();
+
         return response()->json(['data' => $invoices]);
     }
 
@@ -57,6 +64,12 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::with(['tests' => function ($query) {
             $query->select('test_id', 'name', 'price');
+        }])
+        ->with(['agent'=> function ($query) {
+            $query->select('id', 'name');
+        }])
+        ->with(['user' => function ($query) {
+            $query->select('id', 'name');
         }])
         ->find($id);
 

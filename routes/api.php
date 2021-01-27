@@ -19,62 +19,62 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Auth routes
-Route::post('login', [AuthController::class, 'login'])->name('login');
-Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum')->name('logout');
+Route::post('login', [AuthController::class, 'login']);
+Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 // Users routes
-Route::get('users', [UserController::class, 'index'])->name('users.index');
-Route::post('users', [UserController::class, 'store'])->name('users.store');
-Route::get('users/{id}', [UserController::class, 'show'])->name('users.show');
-Route::put('users/{id}', [UserController::class, 'update'])->name('users.update');
-Route::delete('users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+Route::get('users', [UserController::class, 'index']);
+Route::post('users', [UserController::class, 'store']);
+Route::get('users/{id}', [UserController::class, 'show']);
+Route::put('users/{id}', [UserController::class, 'update']);
+Route::delete('users/{id}', [UserController::class, 'destroy']);
 
 // Branchs routes
-Route::get('branches', [BranchController::class, 'index'])->name('branches.index');
-Route::post('branches', [BranchController::class, 'store'])->name('branches.store');
-Route::get('branches/{id}', [BranchController::class, 'show'])->name('branches.show');
-Route::put('branches/{id}', [BranchController::class, 'update'])->name('branches.update');
-Route::delete('branches/{id}', [BranchController::class, 'destroy'])->name('branches.destroy');
+Route::get('branches', [BranchController::class, 'index']);
+Route::post('branches', [BranchController::class, 'store']);
+Route::get('branches/{id}', [BranchController::class, 'show']);
+Route::put('branches/{id}', [BranchController::class, 'update']);
+Route::delete('branches/{id}', [BranchController::class, 'destroy']);
 
 // Agents routes
-Route::get('agents', [AgentController::class, 'index'])->name('agents.index');
-Route::post('agents', [AgentController::class, 'store'])->name('agents.store');
-Route::get('agents/{id}', [AgentController::class, 'show'])->name('agents.show');
-Route::put('agents/{id}', [AgentController::class, 'update'])->name('agents.update');
-Route::delete('agents/{id}', [AgentController::class, 'destroy'])->name('agents.destroy');
+Route::get('agents', [AgentController::class, 'index']);
+Route::post('agents', [AgentController::class, 'store']);
+Route::get('agents/{id}', [AgentController::class, 'show']);
+Route::put('agents/{id}', [AgentController::class, 'update']);
+Route::delete('agents/{id}', [AgentController::class, 'destroy']);
 
 // Companies routes
-Route::get('companies', [CompanyController::class, 'index'])->name('companies.index');
-Route::post('companies', [CompanyController::class, 'store'])->name('companies.store');
-Route::get('companies/{id}', [CompanyController::class, 'show'])->name('companies.show');
-Route::put('companies/{id}', [CompanyController::class, 'update'])->name('companies.update');
-Route::delete('companies/{id}', [CompanyController::class, 'destroy'])->name('companies.destroy');
+Route::get('companies', [CompanyController::class, 'index']);
+Route::post('companies', [CompanyController::class, 'store']);
+Route::get('companies/{id}', [CompanyController::class, 'show']);
+Route::put('companies/{id}', [CompanyController::class, 'update']);
+Route::delete('companies/{id}', [CompanyController::class, 'destroy']);
 
 // TestTypes routes
-Route::get('testTypes', [TestTypeController::class, 'index'])->name('testTypes.index');
-Route::post('testTypes', [TestTypeController::class, 'store'])->name('testTypes.store');
-Route::get('testTypes/{id}', [TestTypeController::class, 'show'])->name('testTypes.show');
-Route::get('testTypes/{id}/tests', [TestTypeController::class, 'tests'])->name('testTypes.tests');
-Route::put('testTypes/{id}', [TestTypeController::class, 'update'])->name('testTypes.update');
-Route::delete('testTypes/{id}', [TestTypeController::class, 'destroy'])->name('testTypes.destroy');
+Route::get('testTypes', [TestTypeController::class, 'index']);
+Route::post('testTypes', [TestTypeController::class, 'store']);
+Route::get('testTypes/{id}', [TestTypeController::class, 'show']);
+Route::get('testTypes/{id}/tests', [TestTypeController::class, 'tests']);
+Route::put('testTypes/{id}', [TestTypeController::class, 'update']);
+Route::delete('testTypes/{id}', [TestTypeController::class, 'destroy']);
 
 // Tests routes
-Route::get('tests', [TestController::class, 'index'])->name('tests.index');
-Route::post('tests', [TestController::class, 'store'])->name('tests.store');
-Route::get('tests/{id}', [TestController::class, 'show'])->name('tests.show');
-Route::put('tests/{id}', [TestController::class, 'update'])->name('tests.update');
-Route::delete('tests/{id}', [TestController::class, 'destroy'])->name('tests.destroy');
+Route::get('tests', [TestController::class, 'index']);
+Route::post('tests', [TestController::class, 'store']);
+Route::get('tests/{id}', [TestController::class, 'show']);
+Route::put('tests/{id}', [TestController::class, 'update']);
+Route::delete('tests/{id}', [TestController::class, 'destroy']);
 
 // Invoices routes
-Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
-Route::post('invoices', [InvoiceController::class, 'store'])->name('invoices.store');
-Route::get('invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
-Route::put('invoices/{id}', [InvoiceController::class, 'update'])->name('invoices.update');
-Route::delete('invoices/{id}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
+Route::get('invoices', [InvoiceController::class, 'index']);
+Route::post('invoices', [InvoiceController::class, 'store']);
+Route::get('invoices/{id}', [InvoiceController::class, 'show']);
+Route::put('invoices/{id}', [InvoiceController::class, 'update']);
+Route::delete('invoices/{id}', [InvoiceController::class, 'destroy']);
 
 // Tests routes
-Route::get('testResults/{invoice_id}', [TestResultController::class, 'index'])->name('testResults.index');
-Route::post('testResults', [TestResultController::class, 'store'])->name('testResults.store');
-Route::get('testResults/{id}', [TestResultController::class, 'show'])->name('testResults.show');
-Route::put('testResults/{id}', [TestResultController::class, 'update'])->name('testResults.update');
-Route::delete('testResults/{id}', [TestResultController::class, 'destroy'])->name('testResults.destroy');
+Route::get('testResults/{invoice_id}', [TestResultController::class, 'index']);
+Route::post('testResults', [TestResultController::class, 'store']);
+Route::get('testResults/{id}', [TestResultController::class, 'show']);
+Route::put('testResults/{id}', [TestResultController::class, 'update']);
+Route::delete('testResults/{id}', [TestResultController::class, 'destroy']);
