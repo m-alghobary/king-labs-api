@@ -17,10 +17,7 @@ class CreateTestsTable extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->unsignedInteger('price');
-            $table->foreignId('test_type_id');
             $table->timestamps();
-
-            $table->foreign('test_type_id')->references('id')->on('test_types')->onDelete('cascade');
         });
     }
 

@@ -18,11 +18,6 @@ class TestResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'price' => $this->price,
-            'test_type_id' => $this->testType->id,
-            'type' => [
-                'id' => $this->testType->id,
-                'name' => $this->testType->name,
-            ]
         ];
     }
 }

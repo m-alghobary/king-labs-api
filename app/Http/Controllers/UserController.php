@@ -34,16 +34,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required',
-            'job_title' => 'required',
-            'branch_id' => 'required',
-            'password' => 'required|confirmed',
-            'password_confirmation' => 'required',
-        ]);
-
+        $validator = $this->_validate($request);
         if ($validator->fails()) {
             return response()->json(['messages' => $validator->errors()], 400);
         }
@@ -78,14 +69,7 @@ class UserController extends Controller
             return response()->json(['message' => 'User not found!'], 404);
         }
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,'. $user->id,
-            'phone' => 'required',
-            'job_title' => 'required',
-            'branch_id' => 'required',
-        ]);
-
+        $validator = $this->_validate($request, $id);
         if ($validator->fails()) {
             return response()->json(['messages' => $validator->errors()], 400);
         }
@@ -112,5 +96,24 @@ class UserController extends Controller
 
         $user->delete();
         return new UserResource($user);
+    }
+
+    private function _validate(Request $request, $id = null)
+    {
+        $currentId = $id ? ','. $id: '';
+        $rules = [
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email'. $currentId,
+            'phone' => 'required',
+            'job_title' => 'required',
+            'branch_id' => 'required',
+        ];
+
+        if (!$id) {
+            $rules['password'] = 'required|confirmed';
+            $rules['password_confirmation'] = 'required';
+        }
+
+        return Validator::make($request->all(), $rules);
     }
 }

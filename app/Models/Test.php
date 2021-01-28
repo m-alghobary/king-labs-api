@@ -12,11 +12,5 @@ class Test extends Model
     protected $fillable = [
         'name',
         'price',
-        'test_type_id',
     ];
-
-    public function testType()
-    {
-        return $this->belongsTo(TestType::class);
-    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CompanyResource;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -20,7 +21,7 @@ class CompanyController extends Controller
     public function index()
     {
         $companies = Company::orderBy('created_at', 'DESC')->get();
-        return response()->json($companies);
+        return CompanyResource::collection($companies);
     }
 
     /**
@@ -28,14 +29,7 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:companies,email',
-            'phone' => 'required',
-            'password' => 'required|confirmed',
-            'password_confirmation' => 'required',
-        ]);
-
+        $validator = $this->_validate($request);
         if ($validator->fails()) {
             return response()->json(['messages' => $validator->errors()], 400);
         }
@@ -44,7 +38,7 @@ class CompanyController extends Controller
         $data['password'] = Hash::make($request->password);
         $company = Company::create($data);
 
-        return response()->json(['data' => $company]);
+        return new CompanyResource($company);
     }
 
     /**
@@ -57,7 +51,7 @@ class CompanyController extends Controller
             return response()->json(['message' => 'Company not found!'], 404);
         }
 
-        return response()->json(['data' => $company]);
+        return new CompanyResource($company);
     }
 
     /**
@@ -70,12 +64,7 @@ class CompanyController extends Controller
             return response()->json(['message' => 'Company not found!'], 404);
         }
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:companies,email,'. $company->id,
-            'phone' => 'required',
-        ]);
-
+        $validator = $this->_validate($request, $id);
         if ($validator->fails()) {
             return response()->json(['messages' => $validator->errors()], 400);
         }
@@ -83,9 +72,10 @@ class CompanyController extends Controller
         $company->name = $request->name;
         $company->email = $request->email;
         $company->phone = $request->phone;
+        $company->fee = $request->fee;
         $company->save();
 
-        return response()->json(['data' => $company]);
+        return new CompanyResource($company);
     }
 
     /**
@@ -99,6 +89,24 @@ class CompanyController extends Controller
         }
 
         $company->delete();
-        return response()->json(['data' => $company]);
+        return new CompanyResource($company);
+    }
+
+    private function _validate(Request $request, $id = null)
+    {
+        $currentId = $id ? ','. $id: '';
+        $rules = [
+            'name' => 'required',
+            'email' => 'required|email|unique:companies,email'. $currentId,
+            'phone' => 'required',
+            'fee' => 'required',
+        ];
+
+        if (!$id) {
+            $rules['password'] = 'required|confirmed';
+            $rules['password_confirmation'] = 'required';
+        }
+
+        return Validator::make($request->all(), $rules);
     }
 }

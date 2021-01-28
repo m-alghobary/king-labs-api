@@ -70,7 +70,6 @@ class TestController extends Controller
 
         $test->name = $request->name;
         $test->price = $request->price;
-        $test->test_type_id = $request->test_type_id;
         $test->save();
 
         return new TestResource($test);
@@ -96,7 +95,6 @@ class TestController extends Controller
         return Validator::make($request->all(), [
             'name' => 'required|unique:tests,name'. $currentId,
             'price' => 'required',
-            'test_type_id' => 'required',
         ]);
     }
 }

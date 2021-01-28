@@ -25,6 +25,7 @@ class CompanyFactory extends Factory
             'name' => $this->faker->company,
             'phone' => $this->faker->phoneNumber,
             'email' => $this->faker->unique()->companyEmail,
+            'fee' => $this->faker->numberBetween(0, 100),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
         ];
     }
