@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TestResource;
+use App\Http\Resources\TestTypeResource;
 use App\Models\TestType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -18,8 +20,8 @@ class TestTypeController extends Controller
      */
     public function index()
     {
-        $testTypes = TestType::withCount('tests')->orderBy('created_at', 'DESC')->get();
-        return response()->json($testTypes);
+        $testTypes = TestType::orderBy('created_at', 'DESC')->get();
+        return TestTypeResource::collection($testTypes);
     }
 
     public function tests($id)
@@ -29,7 +31,7 @@ class TestTypeController extends Controller
             return response()->json(['message' => 'Test type not found!'], 404);
         }
 
-        return response()->json(['data' => $testType->tests]);
+        return TestResource::collection($testType->tests);
     }
 
     /**
@@ -45,7 +47,7 @@ class TestTypeController extends Controller
         $data = $request->all();
         $testType = TestType::create($data);
 
-        return response()->json(['data' => $testType]);
+        return new TestTypeResource($testType);
     }
 
     /**
@@ -58,7 +60,7 @@ class TestTypeController extends Controller
             return response()->json(['message' => 'Test type not found!'], 404);
         }
 
-        return response()->json(['data' => $testType]);
+        return new TestTypeResource($testType);
     }
 
     /**
@@ -79,7 +81,7 @@ class TestTypeController extends Controller
         $testType->name = $request->name;
         $testType->save();
 
-        return response()->json(['data' => $testType]);
+        return new TestTypeResource($testType);
     }
 
     /**
@@ -93,7 +95,7 @@ class TestTypeController extends Controller
         }
 
         $testType->delete();
-        return response()->json(['data' => $testType]);
+        return new TestTypeResource($testType);
     }
 
     private function _validate(Request $request)

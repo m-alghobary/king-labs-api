@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TestResource;
 use App\Models\Test;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -18,13 +19,9 @@ class TestController extends Controller
      */
     public function index()
     {
-        $tests = Test::with(['testType' => function ($query) {
-            $query->select('id', 'name');
-        }])
-        ->orderBy('created_at', 'DESC')
-        ->get();
+        $tests = Test::orderBy('created_at', 'DESC')->get();
 
-        return response()->json($tests);
+        return TestResource::collection($tests);
     }
 
     /**
@@ -40,7 +37,7 @@ class TestController extends Controller
         $data = $request->all();
         $test = Test::create($data);
 
-        return response()->json(['data' => $test]);
+        return new TestResource($test);
     }
 
     /**
@@ -53,7 +50,7 @@ class TestController extends Controller
             return response()->json(['message' => 'Test not found!'], 404);
         }
 
-        return response()->json(['data' => $test]);
+        return new TestResource($test);
     }
 
     /**
@@ -76,7 +73,7 @@ class TestController extends Controller
         $test->test_type_id = $request->test_type_id;
         $test->save();
 
-        return response()->json(['data' => $test]);
+        return new TestResource($test);
     }
 
     /**
@@ -90,7 +87,7 @@ class TestController extends Controller
         }
 
         $test->delete();
-        return response()->json(['data' => $test]);
+        return new TestResource($test);
     }
 
     private function _validate(Request $request, $id = null)
