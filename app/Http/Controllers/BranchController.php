@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BranchResource;
 use App\Models\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -19,7 +20,8 @@ class BranchController extends Controller
     public function index()
     {
         $branches = Branch::orderBy('created_at', 'DESC')->get();
-        return response()->json($branches);
+
+        return BranchResource::collection($branches);
     }
 
     /**
@@ -35,7 +37,7 @@ class BranchController extends Controller
         $data = $request->all();
         $branch = Branch::create($data);
 
-        return response()->json(['data' => $branch]);
+        return new BranchResource($branch);
     }
 
     /**
@@ -48,7 +50,7 @@ class BranchController extends Controller
             return response()->json(['message' => 'Branch not found!'], 404);
         }
 
-        return response()->json(['data' => $branch]);
+        return new BranchResource($branch);
     }
 
     /**
@@ -71,7 +73,7 @@ class BranchController extends Controller
         $branch->address = $request->address;
         $branch->save();
 
-        return response()->json(['data' => $branch]);
+        return new BranchResource($branch);
     }
 
     /**
@@ -85,7 +87,7 @@ class BranchController extends Controller
         }
 
         $branch->delete();
-        return response()->json(['data' => $branch]);
+        return new BranchResource($branch);
     }
 
     private function _validate(Request $request)
