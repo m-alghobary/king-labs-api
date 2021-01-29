@@ -33,4 +33,14 @@ class Agent extends Model
     {
         return $this->hasMany(TestResult::class);
     }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function batch()
+    {
+        return $this->belongsTo(Batch::class);
+    }
 }

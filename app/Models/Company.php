@@ -23,4 +23,14 @@ class Company extends Authenticatable
     protected $hidden = [
         'password',
     ];
+
+    public function batches()
+    {
+        return $this->hasMany(Batch::class);
+    }
+
+    public function agents()
+    {
+        return $this->hasManyThrough(Agent::class, Batch::class);
+    }
 }
