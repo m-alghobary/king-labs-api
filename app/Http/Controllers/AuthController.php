@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,15 +21,20 @@ class AuthController extends Controller
             return response()->json(['messages' => $validator->errors()], 400);
         }
 
-        $user = User::where('email', $request->email)->first();
-        if (is_null($user)) {
-            return response()->json(['messages' => 'User not found!'], 404);
+        $type = $request->get('type', 'user');
+        $loginData = $request->only(['email', 'password']);
+
+        $account = $type === 'user' ? User::where('email', $request->email)->first() : Company::where('email', $request->email)->first();
+        if (is_null($account)) {
+            return response()->json(['messages' => 'Account not found!'], 404);
         }
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        $loggedIn = $type === 'user'? Auth::attempt($loginData): Auth::guard('company')->attempt($loginData);
+        if ($loggedIn) {
             return response()->json([
-                'data' => Auth::user(),
-                'token' => $user->createToken('userToken')->plainTextToken,
+                'data' => $account,
+                'type' => $type,
+                'token' => $account->createToken('userToken')->plainTextToken,
             ]);
         }
 
