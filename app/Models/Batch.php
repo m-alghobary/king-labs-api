@@ -9,9 +9,15 @@ class Batch extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'identifier',
+        'company_id',
+    ];
+
     public function agents()
     {
-        return $this->hasMany(Agent::class);
+        return $this->belongsToMany(Agent::class);
     }
 
     public function company()

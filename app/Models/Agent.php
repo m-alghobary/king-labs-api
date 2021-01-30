@@ -39,8 +39,8 @@ class Agent extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function batch()
+    public function batches()
     {
-        return $this->belongsTo(Batch::class);
+        return $this->belongsToMany(Batch::class);
     }
 }

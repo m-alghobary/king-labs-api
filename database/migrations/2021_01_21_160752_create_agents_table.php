@@ -18,7 +18,6 @@ class CreateAgentsTable extends Migration
             $table->string('name');
             $table->integer('age');
             $table->tinyInteger('gender');
-            $table->string('address')->nullable();
             $table->string('identity');
             $table->string('identity_number');
             $table->foreignId('branch_id');

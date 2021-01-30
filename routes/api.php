@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BatchController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CompanyController;
@@ -49,6 +50,12 @@ Route::post('companies', [CompanyController::class, 'store']);
 Route::get('companies/{id}', [CompanyController::class, 'show']);
 Route::put('companies/{id}', [CompanyController::class, 'update']);
 Route::delete('companies/{id}', [CompanyController::class, 'destroy']);
+
+// Batches routes
+Route::get('batches', [BatchController::class, 'index']);
+Route::post('batches', [BatchController::class, 'store']);
+Route::get('batches/{id}', [BatchController::class, 'show']);
+Route::put('batches/{id}', [BatchController::class, 'update']);
 
 // TestTypes routes
 Route::get('testTypes', [TestTypeController::class, 'index']);

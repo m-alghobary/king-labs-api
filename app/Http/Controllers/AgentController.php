@@ -69,7 +69,6 @@ class AgentController extends Controller
 
         $agent->name = $request->name;
         $agent->age = $request->age;
-        $agent->address = $request->address;
         $agent->identity = $request->identity;
         $agent->identity_number = $request->identity_number;
         $agent->save();
