@@ -56,6 +56,7 @@ Route::get('batches', [BatchController::class, 'index']);
 Route::post('batches', [BatchController::class, 'store']);
 Route::get('batches/{id}', [BatchController::class, 'show']);
 Route::put('batches/{id}', [BatchController::class, 'update']);
+Route::delete('batches/{id}', [BatchController::class, 'destroy']);
 
 // TestTypes routes
 Route::get('testTypes', [TestTypeController::class, 'index']);

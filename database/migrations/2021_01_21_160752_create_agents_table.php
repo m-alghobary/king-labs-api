@@ -20,10 +20,7 @@ class CreateAgentsTable extends Migration
             $table->tinyInteger('gender');
             $table->string('identity');
             $table->string('identity_number');
-            $table->foreignId('branch_id');
             $table->timestamps();
-
-            $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
         });
     }
 
