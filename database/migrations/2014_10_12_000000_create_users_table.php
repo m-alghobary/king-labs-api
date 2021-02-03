@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('job_title');
             $table->string('phone');
             $table->string('email')->unique();
+            $table->boolean('suspended')->default(0);
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

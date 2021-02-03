@@ -58,14 +58,6 @@ Route::get('batches/{id}', [BatchController::class, 'show']);
 Route::put('batches/{id}', [BatchController::class, 'update']);
 Route::delete('batches/{id}', [BatchController::class, 'destroy']);
 
-// TestTypes routes
-Route::get('testTypes', [TestTypeController::class, 'index']);
-Route::post('testTypes', [TestTypeController::class, 'store']);
-Route::get('testTypes/{id}', [TestTypeController::class, 'show']);
-Route::get('testTypes/{id}/tests', [TestTypeController::class, 'tests']);
-Route::put('testTypes/{id}', [TestTypeController::class, 'update']);
-Route::delete('testTypes/{id}', [TestTypeController::class, 'destroy']);
-
 // Tests routes
 Route::get('tests', [TestController::class, 'index']);
 Route::post('tests', [TestController::class, 'store']);

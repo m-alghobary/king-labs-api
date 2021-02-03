@@ -18,6 +18,7 @@ class CreateCompaniesTable extends Migration
             $table->string('name');
             $table->string('phone');
             $table->integer('fee');
+            $table->unsignedDouble('amount');
             $table->string('email')->unique();
             $table->string('password');
             $table->timestamps();

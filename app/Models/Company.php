@@ -17,6 +17,7 @@ class Company extends Authenticatable
         'phone',
         'email',
         'fee',
+        'amount',
         'password',
     ];
 

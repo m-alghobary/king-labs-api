@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,10 +19,7 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        $invoices = Invoice::with(['agent'=> function ($query) {
-            $query->select('id', 'name');
-        }])
-        ->with(['user' => function ($query) {
+        $invoices = Invoice::with(['user' => function ($query) {
             $query->select('id', 'name');
         }])
         ->get();
@@ -35,11 +33,14 @@ class InvoiceController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'agent_id' => 'required',
             'payment_method' => 'required',
+            'total_amount' => 'required',
             'amount' => 'required',
             'remain' => 'required',
             'discount' => 'required',
+            'discount_type' => 'required',
+            'delivery_date' => 'required',
+            'agent_ids' => 'required',
             'test_ids' => 'required',
         ]);
 
@@ -48,11 +49,12 @@ class InvoiceController extends Controller
         }
 
         $data = $request->except(['test_ids']);
+        $data['delivery_date'] = Carbon::parse($request->delivery_date)->format('Y-m-d');
         $data['user_id'] = auth()->user()->id;
-        // return response()->json($data);
 
         $invoice = Invoice::create($data);
         $invoice->tests()->attach($request->test_ids);
+        $invoice->agents()->attach($request->agent_ids);
 
         return response()->json(['data' => $invoice]);
     }
@@ -63,10 +65,10 @@ class InvoiceController extends Controller
     public function show($id)
     {
         $invoice = Invoice::with(['tests' => function ($query) {
-            $query->select('test_id', 'name', 'price');
+            $query->select('test_id', 'name');
         }])
-        ->with(['agent'=> function ($query) {
-            $query->select('id', 'name');
+        ->with(['agents'=> function ($query) {
+            $query->select('name');
         }])
         ->with(['user' => function ($query) {
             $query->select('id', 'name');

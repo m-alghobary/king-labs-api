@@ -20,7 +20,6 @@ class TestController extends Controller
     public function index()
     {
         $tests = Test::orderBy('created_at', 'DESC')->get();
-
         return TestResource::collection($tests);
     }
 
@@ -34,8 +33,9 @@ class TestController extends Controller
             return response()->json(['messages' => $validator->errors()], 400);
         }
 
-        $data = $request->all();
+        $data = $request->only(['name', 'duration']);
         $test = Test::create($data);
+        $test->prices()->create($request->only('price'));
 
         return new TestResource($test);
     }
@@ -69,7 +69,13 @@ class TestController extends Controller
         }
 
         $test->name = $request->name;
-        $test->price = $request->price;
+        $test->duration = $request->duration;
+
+        if ($test->getCurrentPrice() != $request->price) {
+            $test->prices()->update(['is_current' => false]);
+            $test->prices()->create($request->price);
+        }
+
         $test->save();
 
         return new TestResource($test);
@@ -86,7 +92,7 @@ class TestController extends Controller
         }
 
         $test->delete();
-        return new TestResource($test);
+        return response()->json(['data' => $test]);
     }
 
     private function _validate(Request $request, $id = null)
@@ -95,6 +101,7 @@ class TestController extends Controller
         return Validator::make($request->all(), [
             'name' => 'required|unique:tests,name'. $currentId,
             'price' => 'required',
+            'duration' => 'required',
         ]);
     }
 }

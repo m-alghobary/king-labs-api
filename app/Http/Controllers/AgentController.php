@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AgentRescource;
 use App\Models\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -19,7 +20,7 @@ class AgentController extends Controller
     public function index()
     {
         $agents = Agent::orderBy('created_at', 'DESC')->get();
-        return response()->json($agents);
+        return AgentRescource::collection($agents);
     }
 
     /**
@@ -36,7 +37,7 @@ class AgentController extends Controller
         $data['branch_id'] = auth()->user()->branch->id;
         $agent = Agent::create($data);
 
-        return response()->json(['data' => $agent]);
+        return new AgentRescource($agent);
     }
 
     /**
@@ -49,7 +50,7 @@ class AgentController extends Controller
             return response()->json(['message' => 'Agent not found!'], 404);
         }
 
-        return response()->json(['data' => $agent]);
+        return new AgentRescource($agent);
     }
 
     /**
@@ -69,11 +70,14 @@ class AgentController extends Controller
 
         $agent->name = $request->name;
         $agent->age = $request->age;
+        $agent->travel_type = $request->travel_type;
         $agent->identity = $request->identity;
         $agent->identity_number = $request->identity_number;
+        $agent->company_id = $request->company_id;
+
         $agent->save();
 
-        return response()->json(['data' => $agent]);
+        return new AgentRescource($agent);
     }
 
     /**
@@ -87,7 +91,7 @@ class AgentController extends Controller
         }
 
         $agent->delete();
-        return response()->json(['data' => $agent]);
+        return new AgentRescource($agent);
     }
 
     private function _validate(Request $request)
@@ -95,6 +99,7 @@ class AgentController extends Controller
         return Validator::make($request->all(), [
             'name' => 'required',
             'age' => 'required',
+            'travel_type' => 'required',
             'gender' => 'required',
             'identity' => 'required',
             'identity_number' => 'required',

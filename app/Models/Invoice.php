@@ -10,18 +10,19 @@ class Invoice extends Model
     use HasFactory;
 
     protected $fillable = [
-        'agent_id',
         'user_id',
         'payment_method',
+        'total_amount',
         'amount',
         'remain',
         'discount',
-        'test_ids',
+        'discount_type',
+        'discount_by',
     ];
 
-    public function agent()
+    public function agents()
     {
-        return $this->belongsTo(Agent::class);
+        return $this->belongsToMany(Agent::class, 'agent_invoice_test');
     }
 
     public function user()
@@ -31,6 +32,6 @@ class Invoice extends Model
 
     public function tests()
     {
-        return $this->belongsToMany(Test::class);
+        return $this->belongsToMany(Test::class, 'agent_invoice_test');
     }
 }

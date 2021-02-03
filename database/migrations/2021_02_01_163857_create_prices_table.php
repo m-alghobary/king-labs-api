@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateInvoiceTestTable extends Migration
+class CreatePricesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateInvoiceTestTable extends Migration
      */
     public function up()
     {
-        Schema::create('invoice_test', function (Blueprint $table) {
+        Schema::create('prices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('invoice_id');
+            $table->unsignedDouble('price');
+            $table->boolean('is_current')->default(true);
             $table->foreignId('test_id');
             $table->timestamps();
 
-            $table->foreign('invoice_id')->references('id')->on('invoices')->onDelete('cascade');
             $table->foreign('test_id')->references('id')->on('tests')->onDelete('cascade');
         });
     }
@@ -31,6 +31,6 @@ class CreateInvoiceTestTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('invoice_test');
+        Schema::dropIfExists('prices');
     }
 }

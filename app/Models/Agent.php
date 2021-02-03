@@ -13,9 +13,11 @@ class Agent extends Model
         'name',
         'age',
         'gender',
+        'travel_type',
         'address',
         'identity',
         'identity_number',
+        'company_id',
         'branch_id',
     ];
 
@@ -26,12 +28,12 @@ class Agent extends Model
 
     public function invoices()
     {
-        return $this->hasMany(Invoice::class);
+        return $this->belongsToMany(Invoice::class, 'agent_invoice_test');
     }
 
-    public function testResults()
+    public function tests()
     {
-        return $this->hasMany(TestResult::class);
+        return $this->belongsToMany(Test::class, 'agent_invoice_test');
     }
 
     public function company()

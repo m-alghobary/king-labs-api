@@ -17,7 +17,8 @@ class TestResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'price' => $this->price,
+            'duration' => $this->duration,
+            'price' => $this->getCurrentPrice(),
         ];
     }
 }

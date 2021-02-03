@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'job_title',
+        'suspended',
         'branch_id',
     ];
 
