@@ -72,7 +72,7 @@ class CompanyController extends Controller
         $company->name = $request->name;
         $company->email = $request->email;
         $company->phone = $request->phone;
-        $company->fee = $request->fee;
+        $company->discount = $request->discount;
         $company->save();
 
         return new CompanyResource($company);
@@ -99,7 +99,7 @@ class CompanyController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:companies,email'. $currentId,
             'phone' => 'required',
-            'fee' => 'required',
+            'discount' => 'required',
         ];
 
         if (!$id) {

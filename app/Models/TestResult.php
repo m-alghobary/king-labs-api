@@ -15,5 +15,13 @@ class TestResult extends Model
         'delivered',
         'delivered_at',
         'operation_id',
+        'user_id',
     ];
+
+    protected $table = 'test_result';
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

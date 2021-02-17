@@ -17,17 +17,10 @@ class TestResultController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($invoice_id)
+    public function index()
     {
-        $testResults = TestResult::where('invoice_id', $invoice_id)
-        ->with(['user' => function ($query) {
+        $testResults = TestResult::with(['user' => function ($query) {
             $query->select('id', 'name');
-        }])
-        ->with(['agent' => function ($query) {
-            $query->select('id', 'name');
-        }])
-        ->with(['test' => function ($query) {
-            $query->select('id', 'name', 'price');
         }])
         ->get();
 
@@ -60,7 +53,7 @@ class TestResultController extends Controller
      */
     public function show($id)
     {
-        $testResult = TestResult::find($id);
+        $testResult = TestResult::where('operation_id', $id)->first();
         if (!$testResult) {
             return response()->json(['message' => 'Test result not found!'], 404);
         }
@@ -83,10 +76,21 @@ class TestResultController extends Controller
             return response()->json(['messages' => $validator->errors()], 400);
         }
 
-        $testResult->agent_id = $request->agent_id;
-        $testResult->test_id = $request->test_id;
-        $testResult->invoice_id = $request->invoice_id;
         $testResult->result = $request->result;
+        $testResult->note = $request->note ? $request->note: '';
+        $testResult->save();
+
+        return response()->json(['data' => $testResult]);
+    }
+
+    public function deliver(Request $request, $id)
+    {
+        $testResult = TestResult::find($id);
+        if (!$testResult) {
+            return response()->json(['message' => 'Test result not found!'], 404);
+        }
+
+        $testResult->delivered = $request->delivered;
         $testResult->save();
 
         return response()->json(['data' => $testResult]);
@@ -109,9 +113,7 @@ class TestResultController extends Controller
     private function _validate(Request $request)
     {
         return Validator::make($request->all(), [
-            'agent_id' => 'required',
-            'test_id' => 'required',
-            'invoice_id' => 'required',
+            'operation_id' => 'required',
             'result' => 'required',
         ]);
     }

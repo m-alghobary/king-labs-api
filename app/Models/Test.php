@@ -11,7 +11,8 @@ class Test extends Model
 
     protected $fillable = [
         'name',
-        'duration'
+        'duration',
+        'note'
     ];
 
     public function prices()

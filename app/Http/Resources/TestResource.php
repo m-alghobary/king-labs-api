@@ -19,6 +19,7 @@ class TestResource extends JsonResource
             'name' => $this->name,
             'duration' => $this->duration,
             'price' => $this->getCurrentPrice(),
+            'note' => $this->note,
         ];
     }
 }

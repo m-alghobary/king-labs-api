@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\AgentRescource;
 use App\Models\Agent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class AgentController extends Controller
@@ -19,7 +20,10 @@ class AgentController extends Controller
      */
     public function index()
     {
-        $agents = Agent::orderBy('created_at', 'DESC')->get();
+        $agents = Agent::where('branch_id', Auth::user()->branch->id)
+            ->orderBy('created_at', 'DESC')
+            ->get();
+
         return AgentRescource::collection($agents);
     }
 
@@ -34,7 +38,8 @@ class AgentController extends Controller
         }
 
         $data = $request->all();
-        $data['branch_id'] = auth()->user()->branch->id;
+        $data['branch_id'] = auth()->user()->branch_id;
+        $data['user_id'] = auth()->user()->id;
         $agent = Agent::create($data);
 
         return new AgentRescource($agent);

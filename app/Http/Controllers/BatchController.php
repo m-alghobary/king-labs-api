@@ -110,6 +110,7 @@ class BatchController extends Controller
     {
         return Validator::make($request->all(), [
             'name' => 'required',
+            'branch_id' => 'required',
             'agents' => 'required|array|min:1'
         ]);
     }
@@ -119,6 +120,7 @@ class BatchController extends Controller
         foreach ($request->agents as $agentData) {
             $agent = new Agent($agentData);
             $agent->company_id = Auth::user()->id;
+            $agent->branch_id = $request->branch_id;
             $agent->save();
 
             $agent->batches()->attach($batch);

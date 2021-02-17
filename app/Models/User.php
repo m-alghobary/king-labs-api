@@ -41,4 +41,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Branch::class);
     }
+
+    public function agents()
+    {
+        return $this->hasMany(Agent::class);
+    }
+
+    public function permission()
+    {
+        return $this->hasOne(Permission::class);
+    }
 }

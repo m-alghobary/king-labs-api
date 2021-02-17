@@ -13,6 +13,7 @@ class Branch extends Model
         'name',
         'phone',
         'address',
+        'is_main'
     ];
 
     public function users()
@@ -23,5 +24,10 @@ class Branch extends Model
     public function agents()
     {
         return $this->hasMany(Agent::class);
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
     }
 }

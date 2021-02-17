@@ -78,6 +78,10 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->phone = $request->phone;
         $user->job_title = $request->job_title;
+        if ($request->password) {
+            $user->password = Hash::make($request->password);
+        }
+
         $user->branch_id = $request->branch_id;
         $user->save();
 

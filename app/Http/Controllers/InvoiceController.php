@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invoice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class InvoiceController extends Controller
@@ -19,10 +20,13 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        $invoices = Invoice::with(['user' => function ($query) {
-            $query->select('id', 'name');
-        }])
-        ->get();
+        $invoices = DB::table('agent_invoice_test')
+            ->join('agents', 'agent_invoice_test.agent_id', '=', 'agents.id')
+            ->join('invoices', 'agent_invoice_test.invoice_id', '=', 'invoices.id')
+            ->join('tests', 'agent_invoice_test.test_id', '=', 'tests.id')
+            ->where('invoices.branch_id', auth()->user()->branch_id)
+            ->select('agent_invoice_test.*', 'invoices.amount', 'tests.name AS test', 'invoices.remain', 'invoices.total_amount', 'agents.name', 'agents.travel_type')
+            ->get();
 
         return response()->json(['data' => $invoices]);
     }
@@ -37,24 +41,30 @@ class InvoiceController extends Controller
             'total_amount' => 'required',
             'amount' => 'required',
             'remain' => 'required',
-            'discount' => 'required',
-            'discount_type' => 'required',
             'delivery_date' => 'required',
-            'agent_ids' => 'required',
-            'test_ids' => 'required',
+            'agents' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['messages' => $validator->errors()], 400);
         }
 
-        $data = $request->except(['test_ids']);
+        $data = $request->except(['agents']);
         $data['delivery_date'] = Carbon::parse($request->delivery_date)->format('Y-m-d');
         $data['user_id'] = auth()->user()->id;
+        $data['branch_id'] = auth()->user()->branch_id;
 
         $invoice = Invoice::create($data);
-        $invoice->tests()->attach($request->test_ids);
-        $invoice->agents()->attach($request->agent_ids);
+
+        foreach ($request->agents as $agent) {
+            foreach ($agent['tests'] as $test) {
+                DB::table('agent_invoice_test')->insert(array(
+                    'agent_id' => $agent['id'],
+                    'invoice_id' => $invoice->id,
+                    'test_id' => $test,
+                ));
+            }
+        }
 
         return response()->json(['data' => $invoice]);
     }
@@ -88,6 +98,19 @@ class InvoiceController extends Controller
     public function update(Request $request, $id)
     {
         //
+    }
+
+    public function updateRemain($id)
+    {
+        $invoice = Invoice::find($id);
+        if (!$invoice) {
+            return response()->json(['message' => 'Invoice not found!'], 404);
+        }
+
+        $invoice->remain = 0;
+        $invoice->save();
+
+        return response()->json(['data' => $invoice]);
     }
 
     /**

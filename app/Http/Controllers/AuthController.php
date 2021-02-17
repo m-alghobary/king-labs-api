@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,11 +30,20 @@ class AuthController extends Controller
             return response()->json(['messages' => 'Account not found!'], 404);
         }
 
+        $permissions = [];
+        if ($type === 'user') {
+            $permission = Permission::where('user_id', $account->id)->first();
+            if ($permission) {
+                $permissions = $permission->permissions;
+            }
+        }
+
         $loggedIn = $type === 'user'? Auth::attempt($loginData): Auth::guard('company')->attempt($loginData);
         if ($loggedIn) {
             return response()->json([
                 'data' => $account,
                 'type' => $type,
+                'permissions' => $permissions,
                 'token' => $account->createToken('userToken')->plainTextToken,
             ]);
         }

@@ -16,16 +16,19 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable();
+            $table->foreignId('branch_id')->nullable();
             $table->string('payment_method');
             $table->unsignedDouble('total_amount');
             $table->unsignedDouble('amount');
             $table->unsignedDouble('remain');
-            $table->unsignedDouble('discount');
-            $table->string('discount_type');
-            $table->string('discount_by');
+            $table->unsignedDouble('discount')->default(0);
+            $table->unsignedDouble('fee')->default(0);
+            $table->string('discount_type')->nullable();
+            $table->string('discount_by')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('branch_id')->references('id')->on('branches')->onDelete('set null');
         });
     }
 

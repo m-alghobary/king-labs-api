@@ -7,6 +7,8 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\TestResultController;
 use App\Http\Controllers\TestTypeController;
@@ -35,6 +37,7 @@ Route::get('branches', [BranchController::class, 'index']);
 Route::post('branches', [BranchController::class, 'store']);
 Route::get('branches/{id}', [BranchController::class, 'show']);
 Route::put('branches/{id}', [BranchController::class, 'update']);
+Route::put('branches/{id}/main', [BranchController::class, 'updateMain']);
 Route::delete('branches/{id}', [BranchController::class, 'destroy']);
 
 // Agents routes
@@ -70,11 +73,22 @@ Route::get('invoices', [InvoiceController::class, 'index']);
 Route::post('invoices', [InvoiceController::class, 'store']);
 Route::get('invoices/{id}', [InvoiceController::class, 'show']);
 Route::put('invoices/{id}', [InvoiceController::class, 'update']);
+Route::put('invoices/{id}/remain', [InvoiceController::class, 'updateRemain']);
 Route::delete('invoices/{id}', [InvoiceController::class, 'destroy']);
 
-// Tests routes
-Route::get('testResults/{invoice_id}', [TestResultController::class, 'index']);
+// Tests Results routes
+Route::get('testResults', [TestResultController::class, 'index']);
 Route::post('testResults', [TestResultController::class, 'store']);
 Route::get('testResults/{id}', [TestResultController::class, 'show']);
 Route::put('testResults/{id}', [TestResultController::class, 'update']);
+Route::put('testResults/{id}/deliver', [TestResultController::class, 'deliver']);
 Route::delete('testResults/{id}', [TestResultController::class, 'destroy']);
+
+// Permissions routes
+Route::post('permissions', [PermissionController::class, 'store']);
+Route::put('permissions', [PermissionController::class, 'update']);
+Route::get('permissions/{id}', [PermissionController::class, 'show']);
+
+// Reports
+Route::get('/reports/financial/summary', [ReportsController::class, 'financialSummary']);
+Route::get('/reports/financial/data', [ReportsController::class, 'financialData']);

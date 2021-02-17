@@ -11,14 +11,21 @@ class Invoice extends Model
 
     protected $fillable = [
         'user_id',
+        'branch_id',
         'payment_method',
         'total_amount',
         'amount',
         'remain',
         'discount',
+        'fee',
         'discount_type',
         'discount_by',
     ];
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 
     public function agents()
     {

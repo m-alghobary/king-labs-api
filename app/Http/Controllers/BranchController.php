@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\BranchResource;
 use App\Models\Branch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class BranchController extends Controller
@@ -71,6 +72,20 @@ class BranchController extends Controller
         $branch->name = $request->name;
         $branch->phone = $request->phone;
         $branch->address = $request->address;
+        $branch->save();
+
+        return new BranchResource($branch);
+    }
+
+    public function updateMain($id)
+    {
+        $branch = Branch::find($id);
+        if (!$branch) {
+            return response()->json(['message' => 'Branch not found!'], 404);
+        }
+
+        DB::table('branches')->update(['is_main' => false]);
+        $branch->is_main = true;
         $branch->save();
 
         return new BranchResource($branch);

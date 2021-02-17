@@ -33,7 +33,7 @@ class TestController extends Controller
             return response()->json(['messages' => $validator->errors()], 400);
         }
 
-        $data = $request->only(['name', 'duration']);
+        $data = $request->only(['name', 'duration', 'note']);
         $test = Test::create($data);
         $test->prices()->create($request->only('price'));
 
@@ -70,10 +70,11 @@ class TestController extends Controller
 
         $test->name = $request->name;
         $test->duration = $request->duration;
+        $test->note = $request->note;
 
         if ($test->getCurrentPrice() != $request->price) {
             $test->prices()->update(['is_current' => false]);
-            $test->prices()->create($request->price);
+            $test->prices()->create($request->only('price'));
         }
 
         $test->save();

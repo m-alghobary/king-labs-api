@@ -18,6 +18,7 @@ class Agent extends Model
         'identity',
         'identity_number',
         'company_id',
+        'user_id',
         'branch_id',
     ];
 
