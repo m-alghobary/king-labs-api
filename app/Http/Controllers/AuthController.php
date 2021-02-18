@@ -48,7 +48,7 @@ class AuthController extends Controller
             ]);
         }
 
-        return response()->json(['messages' => 'User not found!'], 404);
+        return response()->json(['messages' => 'Account not found!'], 404);
     }
 
     public function logout(Request $request)

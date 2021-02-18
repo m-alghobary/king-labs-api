@@ -57,14 +57,33 @@ Route::get('/print/invoice/{id}', function ($id) {
 });
 
 Route::get('/print/reports/summary', function (Request $request) {
-    $query = Branch::withCount('invoices')
-        ->withSum('invoices', 'amount')
-        ->withSum('invoices', 'total_amount')
-        ->withSum('invoices', 'discount')
-        ->withSum('invoices', 'fee');
+    $params = $request->query();
+    $isMain = Branch::find($params['branch'])->is_main;
 
-    $branch = Branch::find($request->get('branch'));
-    $data =  $branch->is_main ? $query->get(): $query->where('id', $branch->id)->get();
+    $query = Branch::withCount(['invoices' => function ($q) use ($params) {
+        return $params['from']? $q->whereBetween('created_at', [$params['from'], $params['to'] ? $params['to']: now()]): $q;
+    }])
+        ->withSum(['invoices' => function ($q) use ($params) {
+            return $params['from']? $q->whereBetween('created_at', [$params['from'], $params['to'] ? $params['to']: now()]): $q;
+        }], 'amount')
+        ->withSum(['invoices' => function ($q) use ($params) {
+            return $params['from']? $q->whereBetween('created_at', [$params['from'], $params['to'] ? $params['to']: now()]): $q;
+        }], 'total_amount')
+        ->withSum(['invoices' => function ($q) use ($params) {
+            return $params['from']? $q->whereBetween('created_at', [$params['from'], $params['to'] ? $params['to']: now()]): $q;
+        }], 'discount')
+        ->withSum(['invoices' => function ($q) use ($params) {
+            return $params['from']? $q->whereBetween('created_at', [$params['from'], $params['to'] ? $params['to']: now()]): $q;
+        }], 'fee');
+
+    if ($params['branches']) {
+        $ids = explode(',', $params['branches']);
+        $query = $query->whereIn('id', $ids);
+    } else {
+        $query = $query->where('id', 'like', $isMain ? '%': '%' . auth()->user()->branch_id . '%');
+    }
+
+    $data = $query->get();
 
     $branches = [];
     $totalInvoices = 0;
@@ -111,11 +130,25 @@ Route::get('/print/reports/summary', function (Request $request) {
 });
 
 Route::get('/print/reports/data', function (Request $request) {
+    $params = $request->query();
+    $isMain = Branch::find($params['branch'])->is_main;
+
     $query = Invoice::with('branch')
             ->with('agents');
 
-    $branch = Branch::find($request->get('branch'));
-    $data =  $branch->is_main ? $query->get(): $query->where('branch_id', $branch->id)->get();
+    if ($params['branches']) {
+        $ids = explode(',', $params['branches']);
+        $query = $query->whereIn('branch_id', $ids);
+    } else {
+        $query = $query->where('branch_id', 'like', $isMain ? '%': '%' . auth()->user()->branch_id . '%');
+    }
+
+    if ($params['from']) {
+        $to = $params['to'] ? $params['to']: now();
+        $query->whereBetween('created_at', [$params['from'], $to]);
+    }
+
+    $data =  $query->get();
 
     $agents = [];
     $totalAmount = 0;

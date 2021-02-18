@@ -15,24 +15,61 @@ class ReportsController extends Controller
         $this->middleware('auth:sanctum');
     }
 
-    public function financialSummary()
+    public function financialSummary(Request $request)
     {
-        $query = Branch::withCount('invoices')
-            ->withSum('invoices', 'amount')
-            ->withSum('invoices', 'total_amount')
-            ->withSum('invoices', 'discount')
-            ->withSum('invoices', 'fee');
+        static $params;
 
-        $data =  auth()->user()->branch->is_main ? $query->get(): $query->where('id', auth()->user()->branch_id)->get();
+        $params = $request->query();
+        $isMain = auth()->user()->branch->is_main;
+
+        $query = Branch::withCount(['invoices' => function ($q) use ($params) {
+            return $params['from']? $q->whereBetween('created_at', [$params['from'], $params['to'] ? $params['to']: now()]): $q;
+        }])
+            ->withSum(['invoices' => function ($q) use ($params) {
+                return $params['from']? $q->whereBetween('created_at', [$params['from'], $params['to'] ? $params['to']: now()]): $q;
+            }], 'amount')
+            ->withSum(['invoices' => function ($q) use ($params) {
+                return $params['from']? $q->whereBetween('created_at', [$params['from'], $params['to'] ? $params['to']: now()]): $q;
+            }], 'total_amount')
+            ->withSum(['invoices' => function ($q) use ($params) {
+                return $params['from']? $q->whereBetween('created_at', [$params['from'], $params['to'] ? $params['to']: now()]): $q;
+            }], 'discount')
+            ->withSum(['invoices' => function ($q) use ($params) {
+                return $params['from']? $q->whereBetween('created_at', [$params['from'], $params['to'] ? $params['to']: now()]): $q;
+            }], 'fee');
+
+        if ($params['branches']) {
+            $ids = explode(',', $params['branches']);
+            $query = $query->whereIn('id', $ids);
+        } else {
+            $query = $query->where('id', 'like', $isMain ? '%': '%' . auth()->user()->branch_id . '%');
+        }
+
+        $data = $query->get();
         return response()->json($data);
     }
 
-    public function financialData()
+    public function financialData(Request $request)
     {
+        $params = $request->query();
+        $isMain = auth()->user()->branch->is_main;
+
         $query = Invoice::with('branch')
             ->with('agents');
 
-        $data = auth()->user()->branch->is_main ? $query->get(): $query->where('branch_id', auth()->user()->branch_id)->get();
+        if ($params['branches']) {
+            $ids = explode(',', $params['branches']);
+            $query = $query->whereIn('branch_id', $ids);
+        } else {
+            $query = $query->where('branch_id', 'like', $isMain ? '%': '%' . auth()->user()->branch_id . '%');
+        }
+
+        if ($params['from']) {
+            $to = $params['to'] ? $params['to']: now();
+            $query->whereBetween('created_at', [$params['from'], $to]);
+        }
+
+        $data = $query->get();
         return FinancialDataReportResource::collection($data);
     }
 }
