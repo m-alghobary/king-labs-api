@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Branch;
+use App\Models\Permission;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class BranchFactory extends Factory
+class PermissionFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Branch::class;
+    protected $model = Permission::class;
 
     /**
      * Define the model's default state.
@@ -22,10 +22,8 @@ class BranchFactory extends Factory
     public function definition()
     {
         return [
-            'name' => 'صنعاء',
-            'phone' => '777777777',
-            'address' => 'Sanaa city',
-            'is_main' => true,
+            'user_id' => 1,
+            'permissions' => ["users","dashboard","agents","agents_delete","reports","invoices","tests","branches","companies"],
         ];
     }
 }

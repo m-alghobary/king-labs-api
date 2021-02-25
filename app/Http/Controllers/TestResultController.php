@@ -41,7 +41,7 @@ class TestResultController extends Controller
             return response()->json(['messages' => $validator->errors()], 400);
         }
 
-        $data = $request->all();
+        $data = $request->result;
         $data['user_id'] = auth()->user()->id;
         $testResult = TestResult::create($data);
 

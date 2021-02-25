@@ -125,7 +125,7 @@
             </tbody>
         </table>
         <div style="margin-top: 20px">
-            {{ QrCode::generate($user) }}
+            {{ QrCode::encoding('UTF-8')->generate($user) }}
         </div>
     </div>
 </body>

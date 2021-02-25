@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BranchResource extends JsonResource
+class TestResultResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +16,12 @@ class BranchResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'address' => $this->address,
-            'phone' => $this->phone,
-            'is_main' => $this->is_main,
-            'state' => 0
+            'delivered' => $this->delivered,
+            'delivered_at' => $this->delivered_at,
+            'note' => $this->note,
+            'operation_id' => $this->operation_id,
+            'result' => $this->result,
+            'state' => 0,
         ];
     }
 }

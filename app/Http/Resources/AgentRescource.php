@@ -30,7 +30,8 @@ class AgentRescource extends JsonResource
             'travel_type' => $this->travel_type,
             'identity_number' => $this->identity_number,
             'company_id' => $this->company_id,
-            'company' => $company
+            'company' => $company,
+            'state' => 0
         ];
     }
 }

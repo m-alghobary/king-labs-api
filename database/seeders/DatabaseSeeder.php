@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Branch;
 use App\Models\Company;
+use App\Models\Permission;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,11 +16,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Branch::factory()->times(12)->create();
-        Company::factory()->times(8)->create();
+        Branch::factory()->times(1)->create();
 
         $this->call([
             UserSeeder::class,
         ]);
+
+        Permission::factory()->times(1)->create();
     }
 }

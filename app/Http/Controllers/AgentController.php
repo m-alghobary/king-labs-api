@@ -18,11 +18,15 @@ class AgentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $agents = Agent::where('branch_id', Auth::user()->branch->id)
-            ->orderBy('created_at', 'DESC')
-            ->get();
+        $isMain = Auth::user()->branch->is_main;
+        $search = trim($request->get('query', '%'));
+        $query = Agent::orderBy('created_at', 'DESC')->where('name', 'like', '%'. $search .'%');
+
+        $agents = $isMain
+                ? $query->paginate($request->get('itemsPerPage', 10))
+                : $query->where('branch_id', Auth::user()->branch->id)->paginate($request->get('itemsPerPage', 10));
 
         return AgentRescource::collection($agents);
     }

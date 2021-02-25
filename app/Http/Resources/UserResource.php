@@ -24,7 +24,8 @@ class UserResource extends JsonResource
             'branch' => [
                 'id' => $this->branch->id,
                 'name' => $this->branch->name,
-            ]
+            ],
+            'state' => 0
         ];
     }
 }

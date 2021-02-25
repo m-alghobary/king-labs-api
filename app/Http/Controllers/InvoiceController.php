@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invoice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,15 +19,20 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $invoices = DB::table('agent_invoice_test')
+        $isMain = Auth::user()->branch->is_main;
+
+        $query = DB::table('agent_invoice_test')
             ->join('agents', 'agent_invoice_test.agent_id', '=', 'agents.id')
             ->join('invoices', 'agent_invoice_test.invoice_id', '=', 'invoices.id')
+            ->join('branches', 'invoices.branch_id', '=', 'branches.id')
             ->join('tests', 'agent_invoice_test.test_id', '=', 'tests.id')
-            ->where('invoices.branch_id', auth()->user()->branch_id)
-            ->select('agent_invoice_test.*', 'invoices.amount', 'tests.name AS test', 'invoices.remain', 'invoices.total_amount', 'agents.name', 'agents.travel_type')
-            ->get();
+            ->select('agent_invoice_test.*', 'invoices.amount', 'tests.name AS test', 'invoices.remain', 'invoices.total_amount', 'agents.name', 'branches.name AS branch', 'agents.travel_type');
+
+        $invoices = $isMain
+                ? $query->get()
+                : $query->where('invoices.branch_id', Auth::user()->branch->id)->get();
 
         return response()->json(['data' => $invoices]);
     }
@@ -69,37 +75,6 @@ class InvoiceController extends Controller
         return response()->json(['data' => $invoice]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        $invoice = Invoice::with(['tests' => function ($query) {
-            $query->select('test_id', 'name');
-        }])
-        ->with(['agents'=> function ($query) {
-            $query->select('name');
-        }])
-        ->with(['user' => function ($query) {
-            $query->select('id', 'name');
-        }])
-        ->find($id);
-
-        if (!$invoice) {
-            return response()->json(['message' => 'Invoice not found!'], 404);
-        }
-
-        return response()->json(['data' => $invoice]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
     public function updateRemain($id)
     {
         $invoice = Invoice::find($id);
@@ -111,13 +86,5 @@ class InvoiceController extends Controller
         $invoice->save();
 
         return response()->json(['data' => $invoice]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        //
     }
 }
