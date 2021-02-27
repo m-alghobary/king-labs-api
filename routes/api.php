@@ -44,20 +44,18 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 Route::get('/data', function (Request $request) {
     $users = User::with(['branch' => function ($query) {
         $query->select('id', 'name');
-    }])
-    ->orderBy('created_at', 'DESC')
-    ->take(20)->get();
+    }])->orderBy('created_at', 'DESC')->get();
 
-    $branches = Branch::orderBy('created_at', 'DESC')->take(20)->get();
-    $companies = Company::orderBy('created_at', 'DESC')->take(20)->get();
-    $tests = Test::orderBy('created_at', 'DESC')->take(20)->get();
+    $branches = Branch::orderBy('created_at', 'DESC')->get();
+    $companies = Company::orderBy('created_at', 'DESC')->get();
+    $tests = Test::orderBy('created_at', 'DESC')->get();
 
     $isMain = Auth::user()->branch->is_main;
     $query = Agent::orderBy('created_at', 'DESC');
 
     $agents = $isMain
-                ? $query->take(20)->get()
-                : $query->where('branch_id', Auth::user()->branch->id)->take(20)->get();
+                ? $query->take(30)->get()
+                : $query->where('branch_id', Auth::user()->branch->id)->take(30)->get();
 
     $permissions = Permission::all();
 
@@ -66,13 +64,14 @@ Route::get('/data', function (Request $request) {
             ->join('invoices', 'agent_invoice_test.invoice_id', '=', 'invoices.id')
             ->join('branches', 'invoices.branch_id', '=', 'branches.id')
             ->join('tests', 'agent_invoice_test.test_id', '=', 'tests.id')
-            ->select('agent_invoice_test.*', 'invoices.amount', 'tests.name AS test', 'invoices.remain', 'invoices.total_amount', 'agents.name', 'branches.name AS branch', 'agents.travel_type');
+            ->select('agent_invoice_test.*', 'invoices.amount', 'tests.name AS test', 'invoices.remain', 'invoices.total_amount', 'agents.name', 'branches.name AS branch', 'agents.travel_type')
+            ->orderBy('invoices.created_at', 'DESC');
 
     $invoices = $isMain
-                ? $query->take(20)->get()
-                : $query->where('invoices.branch_id', Auth::user()->branch->id)->take(20)->get();
+                ? $query->take(30)->get()
+                : $query->where('invoices.branch_id', Auth::user()->branch->id)->take(30)->get();
 
-    $testResults = TestResult::take(20)->get();
+    $testResults = TestResult::take(30)->get();
 
     return response()->json([
         'data' => [
